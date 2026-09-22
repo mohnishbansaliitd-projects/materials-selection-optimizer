@@ -1,0 +1,33 @@
+material_id,name,category,condition,density_kg_m3_min,density_kg_m3_max,density_kg_m3_typ,youngs_modulus_gpa_min,youngs_modulus_gpa_max,youngs_modulus_gpa_typ,shear_modulus_gpa_typ,poissons_ratio_typ,yield_strength_mpa_min,yield_strength_mpa_max,yield_strength_mpa_typ,tensile_strength_mpa_min,tensile_strength_mpa_max,tensile_strength_mpa_typ,elongation_pct_typ,fracture_toughness_mpam12_typ,hardness_hb_typ,thermal_conductivity_w_mk_typ,cost_usd_per_kg_typ,machinability_rating_pct,corrosion_resistance_score,max_service_temp_c,source_reference
+STEEL_1018,AISI 1018 Low Carbon Steel,Carbon Steel,Cold Drawn,7850,7870,7870,200,210,205,80,0.29,360,400,370,440,480,440,15,50,126,51.9,1.20,78,2,400,ASM Metals Handbook Vol 1
+STEEL_1045,AISI 1045 Medium Carbon Steel,Carbon Steel,Normalized,7830,7870,7850,200,210,206,80,0.29,340,380,360,570,620,585,16,55,163,49.8,1.40,65,2,450,ASM Metals Handbook Vol 1
+STEEL_1045_QT,AISI 1045 Steel (Q&T),Carbon Steel,Quenched & Tempered (400C),7830,7870,7850,200,210,206,80,0.29,570,650,620,770,850,800,12,45,240,49.8,1.60,55,2,450,ASM Metals Handbook Vol 1
+STEEL_4140_QT,AISI 4140 Alloy Steel (Chromoly),Alloy Steel,Quenched & Tempered (540C),7830,7870,7850,205,215,210,80,0.29,850,980,950,950,1100,1020,15,65,302,42.6,2.80,66,2,480,ASM Metals Handbook Vol 1
+STEEL_4340_QT,AISI 4340 Ni-Cr-Mo Steel,Alloy Steel,Quenched & Tempered (425C),7830,7870,7850,205,215,210,80,0.29,1200,1350,1280,1350,1500,1400,11,55,410,44.5,4.50,50,2,450,ASM Metals Handbook Vol 1
+STEEL_8620_CARB,AISI 8620 Case Hardening Steel,Alloy Steel,Carburized & Hardened Case,7830,7870,7850,205,215,210,80,0.29,700,900,800,900,1150,1000,12,40,600,46.6,3.20,60,2,400,Machinery Handbook 30th Ed
+STEEL_20MNCR5,20MnCr5 (EN 1.7147) Gear Steel,Alloy Steel,Carburized Case Hardened,7800,7860,7830,205,215,210,80,0.29,750,950,850,1000,1250,1100,11,42,620,44.0,3.50,58,2,400,DIN EN 10084 Datasheet
+STEEL_300M,300M Ultra-High Strength Steel,Alloy Steel,Normalized & Tempered,7830,7870,7850,205,215,210,80,0.29,1500,1700,1620,1850,2100,1950,9,60,550,38.0,8.50,35,2,450,MIL-HDBK-5J / MMPDS
+STEEL_D2_TOOL,D2 High-Carbon High-Cr Tool Steel,Tool Steel,Air Hardened & Tempered,7680,7720,7700,200,215,207,81,0.28,1500,1800,1650,1700,2100,1900,4,22,600,20.0,7.00,30,3,500,ASM Tool Steels Handbook
+SS_304,AISI 304 Austenitic Stainless Steel,Stainless Steel,Annealed,7900,8030,8000,190,200,193,77,0.29,205,240,215,515,620,550,55,100,170,16.2,4.80,45,4,800,ASM Metals Handbook Vol 3
+SS_316,AISI 316 Marine Stainless Steel,Stainless Steel,Annealed,7950,8050,8000,190,200,193,77,0.29,240,290,260,550,650,580,50,110,165,16.3,6.20,40,5,800,ASM Metals Handbook Vol 3
+SS_17_4PH,17-4 PH Precipitation Hardened SS,Stainless Steel,H900 Condition,7750,7850,7800,195,205,196,77,0.27,1100,1250,1170,1300,1450,1380,10,40,420,17.9,9.50,50,4,315,MMPDS-01 / AK Steel Data
+AL_6061_T6,6061-T6 Structural Aluminum,Aluminum Alloy,T6 Temper,2680,2720,2700,68,70,68.9,26,0.33,270,290,276,310,330,310,12,29,95,167.0,4.20,90,3,150,Aluminum Association Blue Book
+AL_7075_T6,7075-T6 Aerospace Aluminum,Aluminum Alloy,T6 Temper,2780,2830,2810,70,73,71.7,26.9,0.33,480,520,503,550,600,572,11,25,150,130.0,6.80,70,3,120,MMPDS-01
+AL_2024_T3,2024-T3 High-Strength Aluminum,Aluminum Alloy,T3 Temper,2750,2800,2780,72,75,73.1,28,0.33,320,360,345,450,490,470,18,34,120,121.0,5.50,75,2,120,MMPDS-01
+AL_CAST_A356,A356.0-T6 Cast Aluminum Alloy,Aluminum Alloy,Sand / Perm Mold T6,2660,2700,2680,70,74,72.4,27,0.33,165,205,185,230,270,250,5,18,80,151.0,3.80,85,3,150,ASM Metals Handbook Vol 2
+TI_6AL_4V,Ti-6Al-4V Grade 5 Titanium Alloy,Titanium Alloy,Annealed,4400,4460,4430,110,119,113.8,44,0.34,880,950,910,950,1050,1000,14,55,330,6.7,35.00,22,5,400,MMPDS-01 / TIMET
+TI_CP2,Grade 2 Commercially Pure Titanium,Titanium Alloy,Annealed,4500,4530,4510,102,108,105,45,0.34,345,450,380,450,550,485,20,70,200,16.4,25.00,30,5,300,TIMET Datasheet
+BRONZE_C93200,SAE 660 High-Leaded Tin Bronze,Copper Alloy,Continuous Cast,8850,9000,8930,95,105,100,38,0.34,120,160,140,240,290,260,18,30,65,59.0,12.00,70,4,230,Copper Development Assoc
+BRASS_C36000,C36000 Free-Cutting Brass,Copper Alloy,Half Hard (H02),8470,8530,8500,95,105,102,37,0.34,260,340,310,400,480,440,15,35,130,115.0,9.50,100,3,180,CDA Handbook
+CAST_IRON_GRAY,Class 30 Gray Cast Iron,Cast Iron,As Cast,7050,7250,7150,95,115,105,41,0.26,140,180,160,200,250,220,0.5,12,200,46.0,1.80,80,2,350,ASM Handbook Vol 15
+CAST_IRON_DUCTILE,65-45-12 Ductile (Nodular) Iron,Cast Iron,Annealed,7050,7200,7100,165,175,169,66,0.28,310,360,330,450,520,480,15,35,170,36.0,2.20,75,2,400,Ductile Iron Society
+MAGNESIUM_AZ91D,AZ91D Die Cast Magnesium,Magnesium Alloy,Die Cast,1800,1820,1810,43,47,45,17,0.35,140,170,155,230,260,240,3,15,65,72.0,5.50,100,2,120,Magnesium Elektron Data
+POLYMER_PA66,Polyamide 66 (Nylon 6/6),Thermoplastic Polymer,Dry As Molded,1130,1150,1140,2.8,3.2,3.0,1.1,0.40,65,85,75,70,90,80,40,3.5,80,0.25,4.50,90,3,90,DuPont Zytel Datasheet
+POLYMER_PA66_GF30,Nylon 6/6 30% Glass Fiber Reinforced,Polymer Composite,Dry As Molded,1350,1390,1370,8.0,9.5,8.8,3.2,0.38,150,190,175,170,210,195,4,6.0,95,0.30,6.00,70,3,120,BASF Ultramid Data
+POLYMER_POM,Polyoxymethylene (Acetal / Delrin),Thermoplastic Polymer,Extruded / Molded,1400,1430,1420,2.8,3.3,3.1,1.1,0.35,60,75,68,65,80,72,30,4.0,85,0.31,5.20,95,3,90,DuPont Delrin Datasheet
+POLYMER_PEEK,Polyetheretherketone (PEEK),High-Perf Polymer,Unfilled Molded,1290,1310,1300,3.8,4.2,4.0,1.4,0.38,95,110,100,100,120,105,35,5.5,100,0.25,65.00,60,5,250,Victrex PEEK Datasheet
+POLYMER_PTFE,Polytetrafluoroethylene (Teflon),Fluoropolymer,Molded,2150,2200,2180,0.4,0.6,0.5,0.18,0.46,12,18,15,20,35,27,250,2.0,40,0.25,18.00,80,5,260,Chemours Teflon Data
+COMPOSITE_CFRP_UD,Carbon Fiber Epoxy Composite (UD),Polymer Composite,Unidirectional Fiber (0 deg),1550,1600,1580,130,150,140,5,0.30,1200,1600,1400,1400,1800,1600,1.5,40,90,5.0,55.00,20,5,130,Hexcel Composites Data
+COMPOSITE_GFRP_WOVEN,E-Glass Epoxy Composite (Woven),Polymer Composite,Quasi-Isotropic Laminate,1850,2000,1900,20,28,24,4,0.22,250,350,300,300,420,360,2.0,25,85,0.4,14.00,40,4,120,ASM Composites Handbook
+CERAMIC_AL2O3,Alumina Ceramic (99.5% Al2O3),Technical Ceramic,Sintered,3850,3950,3900,360,390,375,150,0.23,2000,3000,2500,250,350,300,0,4.0,1800,30.0,15.00,5,5,1500,CoorsTek Technical Ceramics
+CERAMIC_SIC,Silicon Carbide (SiC),Technical Ceramic,Sintered Alpha-SiC,3100,3200,3150,400,430,410,175,0.16,3000,4000,3500,350,450,400,0,3.5,2500,120.0,38.00,2,5,1600,Saint-Gobain Ceramics
