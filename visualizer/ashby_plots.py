@@ -1,9 +1,4 @@
-"""
-Ashby Property Charts and Pareto Visualization Generator.
-
-Produces publication-grade log-log property space diagrams with material class envelopes,
-performance index guide slopes, and Pareto trade-off curves.
-"""
+"""Log-log Ashby property charts and Pareto trade-off plots."""
 
 import os
 import numpy as np
@@ -13,7 +8,6 @@ from typing import Optional, List
 
 
 def setup_plot_style():
-    """Configures clean scientific publication style."""
     plt.rcParams.update({
         "font.size": 10,
         "axes.labelsize": 11,
@@ -49,19 +43,15 @@ def plot_modulus_vs_density(
     df: pd.DataFrame,
     output_path: str = "outputs/figures/ashby_modulus_density.png"
 ):
-    """
-    Generates classical Ashby Chart: Young's Modulus (E) vs Density (rho).
-    Includes guide slopes: E/rho (Tension, slope=1), E^1/2/rho (Bending, slope=2), E^1/3/rho (Panel, slope=3).
-    """
+    """Young's modulus vs density, with tie/beam/panel guide slopes (1, 2, 3) overlaid."""
     setup_plot_style()
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    
+
     fig, ax = plt.subplots(figsize=(9, 6.5), dpi=300)
-    
-    # Convert density to Mg/m^3 (g/cm^3) for standard Ashby chart representation
-    rho = df["density_kg_m3_typ"] / 1000.0
+
+    rho = df["density_kg_m3_typ"] / 1000.0  # Mg/m^3, standard Ashby chart units
     E = df["youngs_modulus_gpa_typ"]
-    
+
     for cat, group in df.groupby("category"):
         color = CATEGORY_COLORS.get(cat, "#333333")
         ax.scatter(
@@ -74,8 +64,7 @@ def plot_modulus_vs_density(
             alpha=0.85,
             zorder=4
         )
-        
-    # Annotate select key materials
+
     key_materials = ["STEEL_4140_QT", "AL_6061_T6", "TI_6AL_4V", "COMPOSITE_CFRP_UD", "CERAMIC_SIC", "POLYMER_PA66"]
     for mat_id in key_materials:
         row = df[df["material_id"] == mat_id]
@@ -89,14 +78,11 @@ def plot_modulus_vs_density(
                 fontsize=7.5,
                 fontweight="bold"
             )
-            
-    # Add guide lines
+
+    # Guide lines: E/rho = C -> E = C*rho (slope 1), E^1/2/rho = C -> E = C*rho^2 (slope 2), etc.
     rho_range = np.linspace(1.0, 9.0, 100)
-    # Slope 1: E / rho = constant -> E = C * rho
     ax.plot(rho_range, 15.0 * rho_range, 'k--', alpha=0.5, label=r"Tie: $M = E/\rho$ (slope 1)")
-    # Slope 2: E^1/2 / rho = constant -> E = C * rho^2
     ax.plot(rho_range, 2.0 * (rho_range ** 2), 'b-.', alpha=0.5, label=r"Beam: $M = E^{1/2}/\rho$ (slope 2)")
-    # Slope 3: E^1/3 / rho = constant -> E = C * rho^3
     ax.plot(rho_range, 0.4 * (rho_range ** 3), 'm:', alpha=0.5, label=r"Panel: $M = E^{1/3}/\rho$ (slope 3)")
     
     ax.set_xscale("log")
@@ -117,15 +103,12 @@ def plot_strength_vs_density(
     df: pd.DataFrame,
     output_path: str = "outputs/figures/ashby_strength_density.png"
 ):
-    """
-    Generates Ashby Chart: Yield Strength (sigma_y) vs Density (rho).
-    Includes guide slopes: sigma/rho, sigma^(2/3)/rho, sigma^(1/2)/rho.
-    """
+    """Yield strength vs density, with tie/beam/panel guide slopes overlaid."""
     setup_plot_style()
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    
+
     fig, ax = plt.subplots(figsize=(9, 6.5), dpi=300)
-    
+
     for cat, group in df.groupby("category"):
         color = CATEGORY_COLORS.get(cat, "#333333")
         ax.scatter(
@@ -138,7 +121,7 @@ def plot_strength_vs_density(
             alpha=0.85,
             zorder=4
         )
-        
+
     rho_range = np.linspace(1.0, 9.0, 100)
     ax.plot(rho_range, 60.0 * rho_range, 'k--', alpha=0.5, label=r"Tie: $\sigma/\rho$ (slope 1)")
     ax.plot(rho_range, 15.0 * (rho_range ** 1.5), 'b-.', alpha=0.5, label=r"Beam: $\sigma^{2/3}/\rho$ (slope 1.5)")
@@ -152,7 +135,7 @@ def plot_strength_vs_density(
     ax.set_xlim(0.8, 10.0)
     ax.set_ylim(8.0, 4000.0)
     ax.legend(loc="upper left", bbox_to_anchor=(1.02, 1), borderaxespad=0.)
-    
+
     plt.tight_layout()
     fig.savefig(output_path)
     plt.close(fig)
@@ -167,29 +150,24 @@ def plot_pareto_front(
     title: str,
     output_path: str
 ):
-    """
-    Plots a 2D Pareto trade-off curve with non-dominated front highlighted.
-    """
     setup_plot_style()
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
-    
+
     fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
-    
-    # Non-Pareto points
+
     non_pareto = df[~df["is_pareto_optimal"]]
     ax.scatter(
         non_pareto[x_col], non_pareto[y_col],
         c="#999999", s=50, alpha=0.6, label="Dominated Candidates", edgecolors="none"
     )
-    
-    # Pareto optimal points
+
     pareto = df[df["is_pareto_optimal"]].sort_values(by=x_col)
     ax.scatter(
         pareto[x_col], pareto[y_col],
         c="#d62728", s=100, alpha=0.9, label="Pareto Optimal Frontier (Rank 1)", edgecolors="k", zorder=5
     )
     ax.plot(pareto[x_col], pareto[y_col], 'r--', alpha=0.7, zorder=4)
-    
+
     for _, row in pareto.iterrows():
         ax.annotate(
             row["name"],
@@ -199,12 +177,45 @@ def plot_pareto_front(
             fontsize=8,
             fontweight="bold"
         )
-        
+
     ax.set_xlabel(x_label)
     ax.set_ylabel(y_label)
     ax.set_title(title, fontweight="bold")
     ax.legend(loc="best")
-    
+
+    plt.tight_layout()
+    fig.savefig(output_path)
+    plt.close(fig)
+
+
+def plot_shaft_geometry_pareto(
+    pareto_df: pd.DataFrame,
+    material_name: str,
+    target_torque_nm: float,
+    output_path: str = "outputs/figures/shaft_geometry_pareto.png"
+):
+    """Diameter vs mass Pareto front from NSGA-II shaft geometry optimization,
+    colored by torsional safety factor against the assumed target torque."""
+    setup_plot_style()
+    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+    fig, ax = plt.subplots(figsize=(8, 6), dpi=300)
+
+    ordered = pareto_df.sort_values(by="diameter_mm")
+    ax.plot(ordered["diameter_mm"], ordered["mass_kg"], 'k--', alpha=0.5, zorder=3)
+    sc = ax.scatter(
+        ordered["diameter_mm"], ordered["mass_kg"],
+        c=ordered["safety_factor"], cmap="viridis",
+        s=90, edgecolors="k", alpha=0.9, zorder=5
+    )
+
+    cbar = fig.colorbar(sc, ax=ax)
+    cbar.set_label(f"Safety Factor (vs assumed T = {target_torque_nm:.0f} N·m)")
+
+    ax.set_xlabel("Shaft Diameter [mm]")
+    ax.set_ylabel("Shaft Mass [kg]")
+    ax.set_title(f"Pareto Front: Shaft Mass vs Diameter — {material_name} (NSGA-II)", fontweight="bold")
+
     plt.tight_layout()
     fig.savefig(output_path)
     plt.close(fig)

@@ -1,8 +1,6 @@
 """
-Ashby Performance Indices Engine.
-
-Provides analytical derivations and numerical evaluations of material performance indices
-based on Michael F. Ashby's methodology ('Materials Selection in Mechanical Design').
+Ashby performance indices, following Ashby's "Materials Selection in Mechanical
+Design" derivations for minimum-mass design under stiffness/strength constraints.
 """
 
 import numpy as np
@@ -10,8 +8,6 @@ import pandas as pd
 from typing import Dict, List, Optional, Union
 
 
-# Registry of standard Ashby Performance Indices
-# Keys are identifiers, values contain the equation description, derivation rationale, and calculation function.
 ASHBY_INDICES = {
     "tie_stiff_mass": {
         "name": "Lightweight Stiff Tie (Tension)",
@@ -131,10 +127,7 @@ def calculate_index(
     hardness_col: str = "hardness_hb_typ",
     shear_col: str = "shear_modulus_gpa_typ"
 ) -> pd.Series:
-    """
-    Computes a selected Ashby Performance Index across a DataFrame of materials.
-    Units are standardized to SI/engineering consistent units for proportional scaling.
-    """
+    """Density is converted GPa/(g/cm^3) style so indices stay dimensionally comparable."""
     if index_key not in ASHBY_INDICES:
         raise ValueError(f"Unknown index_key: '{index_key}'. Available: {list(ASHBY_INDICES.keys())}")
 

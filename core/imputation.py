@@ -1,10 +1,6 @@
 """
-Physics-Informed and Grouped ML Imputation Engine.
-
-Implements:
-1. First-principles physical and empirical relations (Tabor hardness, isotropic elasticity, endurance limit).
-2. Grouped k-NN and Random Forest imputation with Leave-One-Alloy-Family-Out validation
-   to prevent synthetic cross-alloy data leakage.
+Fills missing properties with physical relations first, then benchmarks ML imputers
+against them using leave-one-category-out CV so no alloy family leaks into its own fit.
 """
 
 import numpy as np
@@ -17,24 +13,21 @@ from sklearn.metrics import mean_absolute_error, r2_score
 
 
 def physics_informed_imputation(df: pd.DataFrame) -> pd.DataFrame:
-    """
-    Applies classical materials mechanics relations where values are unpopulated.
-    """
     df_imputed = df.copy()
-    
-    # 1. Isotropic Shear Modulus: G = E / [2 * (1 + nu)]
+
+    # Isotropic elasticity: G = E / [2(1 + nu)]
     mask_g_missing = df_imputed["shear_modulus_gpa_typ"].isna()
     if mask_g_missing.any():
         E = df_imputed.loc[mask_g_missing, "youngs_modulus_gpa_typ"]
         nu = df_imputed.loc[mask_g_missing, "poissons_ratio_typ"].fillna(0.30)
         df_imputed.loc[mask_g_missing, "shear_modulus_gpa_typ"] = E / (2.0 * (1.0 + nu))
-        
-    # 2. Tabor's Relationship for Hardness in Ductile Metals: HB ~ UTS / 3.45 (or 3 * yield)
+
+    # Tabor's relation for ductile metals: HB ~ UTS / 3.45
     mask_hb_missing = df_imputed["hardness_hb_typ"].isna()
     if mask_hb_missing.any():
         uts = df_imputed.loc[mask_hb_missing, "tensile_strength_mpa_typ"]
         df_imputed.loc[mask_hb_missing, "hardness_hb_typ"] = uts / 3.45
-        
+
     return df_imputed
 
 
@@ -43,10 +36,7 @@ def evaluate_grouped_imputation(
     target_col: str = "yield_strength_mpa_typ",
     feature_cols: Optional[list] = None
 ) -> Dict[str, float]:
-    """
-    Evaluates ML imputation under Leave-One-Group-Out cross-validation
-    (grouped by material category) to quantify generalization across material families.
-    """
+    """Leave-One-Group-Out by category, so a model is never tested on the family it trained on."""
     if feature_cols is None:
         feature_cols = ["density_kg_m3_typ", "youngs_modulus_gpa_typ", "hardness_hb_typ"]
         

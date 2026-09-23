@@ -1,19 +1,10 @@
-"""
-Material Screening and Hard Constraints Filter Module.
-
-Filters a materials database against design constraints (boundary conditions)
-before multi-objective ranking or Pareto front generation.
-"""
+"""Applies hard constraints to the materials database before Pareto/TOPSIS ranking."""
 
 import pandas as pd
 from typing import Dict, Any, Tuple, List, Optional
 
 
 class MaterialScreener:
-    """
-    Applies boundary-condition filters and generates screening diagnostics.
-    """
-
     def __init__(self, df: pd.DataFrame):
         self.df = df.copy()
 
@@ -31,9 +22,7 @@ class MaterialScreener:
         allowed_categories: Optional[List[str]] = None,
         excluded_categories: Optional[List[str]] = None
     ) -> Tuple[pd.DataFrame, Dict[str, int]]:
-        """
-        Applies constraints and tracks exclusion statistics per constraint.
-        """
+        """Applies each given constraint in turn and records how many rows it rejects."""
         filtered = self.df.copy()
         rejection_stats = {}
 

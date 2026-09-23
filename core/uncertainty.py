@@ -1,9 +1,4 @@
-"""
-Monte Carlo Uncertainty and Rank Stability Engine.
-
-Propagates property tolerances (min/max/scatter) into index variations,
-rank stability probabilities, and Pareto front membership confidence.
-"""
+"""Monte Carlo sampling of property tolerances (min/max scatter) to test rank stability."""
 
 import numpy as np
 import pandas as pd
@@ -18,10 +13,7 @@ def run_monte_carlo_rank_stability(
     n_iterations: int = 1000,
     random_seed: int = 42
 ) -> pd.DataFrame:
-    """
-    Performs Monte Carlo simulation over min/max property bounds.
-    Evaluates how often each material ranks in Top 1, Top 3, and Top 5.
-    """
+    """Resamples properties within their min/max bounds and tracks how often each material lands in the top 1/3/5."""
     np.random.seed(random_seed)
     df_res = df.copy().reset_index(drop=True)
     num_materials = len(df_res)
@@ -30,26 +22,21 @@ def run_monte_carlo_rank_stability(
     index_values_matrix = np.zeros((num_materials, n_iterations), dtype=float)
     
     for it in range(n_iterations):
-        # Sample uniformly between min and max
         sample_df = df_res.copy()
-        
-        # Density sample
+
         sample_df["density_sampled"] = np.random.uniform(
             sample_df["density_kg_m3_min"], sample_df["density_kg_m3_max"]
         )
-        # Modulus sample
         sample_df["modulus_sampled"] = np.random.uniform(
             sample_df["youngs_modulus_gpa_min"], sample_df["youngs_modulus_gpa_max"]
         )
-        # Yield sample
         sample_df["yield_sampled"] = np.random.uniform(
             sample_df["yield_strength_mpa_min"], sample_df["yield_strength_mpa_max"]
         )
-        # Cost sample (assuming +-15% market volatility)
+        # +-15% to approximate market price volatility, since cost has no min/max columns
         cost_base = sample_df["cost_usd_per_kg_typ"].to_numpy()
         sample_df["cost_sampled"] = np.random.uniform(cost_base * 0.85, cost_base * 1.15)
-        
-        # Calculate sampled index
+
         idx_vals = calculate_index(
             sample_df,
             index_key,
@@ -60,13 +47,11 @@ def run_monte_carlo_rank_stability(
         )
         
         index_values_matrix[:, it] = idx_vals.to_numpy()
-        # Rank: 1 = highest index
-        order = np.argsort(-idx_vals.to_numpy())
+        order = np.argsort(-idx_vals.to_numpy())  # rank 1 = highest index
         ranks = np.empty_like(order)
         ranks[order] = np.arange(1, num_materials + 1)
         ranks_matrix[:, it] = ranks
-        
-    # Aggregate statistics
+
     prob_rank_1 = np.mean(ranks_matrix == 1, axis=1) * 100.0
     prob_top_3 = np.mean(ranks_matrix <= 3, axis=1) * 100.0
     prob_top_5 = np.mean(ranks_matrix <= 5, axis=1) * 100.0

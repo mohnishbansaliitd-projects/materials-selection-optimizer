@@ -1,6 +1,4 @@
-"""
-Unit Test Suite for Project 1: Data-Driven Materials Selection Optimizer.
-"""
+"""Unit tests for the materials selection optimizer."""
 
 import os
 import sys
@@ -15,6 +13,7 @@ from core.screening import MaterialScreener
 from core.pareto_optimizer import find_pareto_front, calculate_topsis_score
 from core.uncertainty import run_monte_carlo_rank_stability
 from core.imputation import physics_informed_imputation
+from core.geometry_optimizer import optimize_shaft_diameter
 
 
 @pytest.fixture
@@ -103,10 +102,32 @@ def test_physics_imputation():
     assert np.isclose(imputed.loc[0, "hardness_hb_typ"], 700.0 / 3.45)
 
 
+def test_shaft_geometry_optimization():
+    """Smoke test: NSGA-II shaft diameter optimization returns a sane, non-empty
+    Pareto front with mass and safety factor both increasing with diameter
+    (the two objectives conflict but are each individually monotonic in d)."""
+    pareto_df = optimize_shaft_diameter(
+        sigma_y_mpa=503.0,      # AL_7075_T6
+        density_kg_m3=2810.0,
+        pop_size=10,
+        n_gen=5,
+        seed=1
+    )
+    assert len(pareto_df) > 0
+    assert (pareto_df["diameter_mm"] >= 10.0).all()
+    assert (pareto_df["diameter_mm"] <= 60.0).all()
+    assert (pareto_df["mass_kg"] > 0).all()
+    assert (pareto_df["safety_factor"] > 0).all()
+
+    ordered = pareto_df.sort_values(by="diameter_mm")
+    assert np.all(np.diff(ordered["mass_kg"].to_numpy()) >= -1e-9)
+    assert np.all(np.diff(ordered["safety_factor"].to_numpy()) >= -1e-9)
+
+
 if __name__ == "__main__":
     data_path = os.path.join(os.path.dirname(__file__), "..", "data", "materials_database.csv")
     df_test = pd.read_csv(data_path)
-    
+
     print("Running test_ashby_indices_calculation...")
     test_ashby_indices_calculation(df_test)
     print("Running test_screening_filter...")
@@ -119,4 +140,6 @@ if __name__ == "__main__":
     test_monte_carlo_stability(df_test)
     print("Running test_physics_imputation...")
     test_physics_imputation()
-    print("\n✅ ALL UNIT TESTS PASSED!")
+    print("Running test_shaft_geometry_optimization...")
+    test_shaft_geometry_optimization()
+    print("\nAll tests passed.")
