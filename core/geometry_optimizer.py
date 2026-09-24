@@ -1,21 +1,11 @@
 """
-Continuous shaft geometry optimization via pymoo's NSGA-II.
+Shaft diameter optimization via pymoo's NSGA-II -- a continuous design variable for one
+already-selected material, trading off mass against torsional safety factor. Complements
+core/pareto_optimizer.py, which ranks the fixed discrete material table instead.
 
-Where core/pareto_optimizer.py ranks a small fixed table of ~32 discrete material
-candidates (non-dominated sorting + TOPSIS), this module optimizes a continuous
-design variable -- shaft diameter -- for a single already-selected material, trading
-off mass against torsional safety factor. This is the regime NSGA-II is suited to:
-a continuous search space, not a re-sort of a lookup table.
-
-Design assumptions (no torque/power spec exists elsewhere in this codebase):
-  - Transmitted torque: 400 N*m. Representative of a mid-size industrial gearbox
-    output shaft (e.g. ~60 kW at ~1450 rpm, T = P / omega). This is an ASSUMED
-    design load, not a measured value -- stated explicitly so it isn't mistaken
-    for a spec pulled from data.
-  - Shaft length: 300 mm, a plausible span between bearing supports for such a
-    gearbox. Only scales mass linearly; does not affect the diameter-safety_factor
-    relationship.
-Both are exposed as keyword arguments so a real spec can override them.
+No torque/power spec exists elsewhere in this codebase, so target torque (400 N*m, a mid-size
+gearbox output shaft) and shaft length (300 mm bearing span) are assumed, not measured -- both
+are kwargs so a real spec can override them.
 """
 
 import numpy as np
